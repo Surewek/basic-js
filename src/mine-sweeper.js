@@ -24,7 +24,6 @@ const { NotImplementedError } = require('../extensions/index.js');
  * ]
  */
  function minesweeper(matrix) {
-  throw new NotImplementedError('Not implemented');
   const directions = [
     [-1, -1],
     [0, -1],
@@ -36,50 +35,34 @@ const { NotImplementedError } = require('../extensions/index.js');
     [1, 1],
   ]
 
-let numberArr = matrix;
+  let numberArr = JSON.parse(JSON.stringify(matrix));
+  const matrixWidth = matrix[0].length;
+  const matrixHeigth = matrix.length;
 
-const matrixWidth = matrix.length;
-const matrixHeigth = matrix[0].length;
-let counter = 0;
+  for(let i = 0; i < matrixHeigth; i++){
+    for(let j = 0; j < matrixWidth; j++){
 
-for(let i = 0; i < matrixWidth; i++){
-  for(let j = 0; j < matrixHeigth; j++){
-    
-    if(matrix[i][j]){
-      numberArr[i][j] = 1;
-    } else {
-      
+      console.log(matrix[i][j])
+      if(matrix[i][j] === true){
+        numberArr[i][j] = 1;
+      } else {
+        let minesCounter = 0;
+        directions.forEach(elem => {
+          if((i + elem[0]) < 0 || (j + elem[1]) < 0 || (i + elem[0]) > matrixHeigth - 1 || (j + elem[1]) > matrixWidth - 1){
+            minesCounter += 0;
+          } else {
+            if((matrix[(i + elem[0])][(j + elem[1])]) === true){
+              minesCounter = minesCounter + 1;
+            }
+          }
+        });
 
-      for(let k = 0; k < directions.length; k++){
-
-        if(i == 0 && [0, 1, 2].includes(k)) continue;
-        if(i == matrixWidth - 1 && [5, 6, 7].includes(k)) continue;
-        if(j == 0 && [0, 3, 5].includes(k)) continue;
-        if(j == matrixHeigth - 1 && [2, 4, 7].includes(k)) continue;
-
-
-         let currentItem = matrix[i + directions[k][1]][j + directions[k][0]];
-
-         console.log(currentItem, i, j)
-
-        if(currentItem === true){
-          counter++
-          
-        }
-        console.log(counter)
-        numberArr[i][j] = counter;
-
-        
+        numberArr[i][j] = minesCounter;
       }
-        counter = 0;
-
     }
-
   }
-}
 
   return numberArr;
-
 }
 
 module.exports = {
